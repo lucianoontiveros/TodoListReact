@@ -1,13 +1,16 @@
-import { useState } from "react"
+
 import Swal from 'sweetalert2'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'; // el v4 esta renombrando al uuidv4 
+import { useFormulario } from "../Hooks/useFormulario";
 
 // El nombre de la propiedades para evitar confundise deben ser como los del formulario(name)
 // El initialState es un hoot actualiza en tiempo real el ingreso de los datos al formulario.
 // luego destructuramos el todo donde se esta guardando la informacion para ahorrar codigo
 
 
+
 //AgregarTodo es un destructuracion del props proveniente del archivo TodoList.Jsx
+// Agregar esta desestructurado del todolist.jsx (props)
 const Formulario = ({agregarTodo}) => {
 
     const initialState = {
@@ -17,11 +20,9 @@ const Formulario = ({agregarTodo}) => {
         prioridad: false
     }
 
-    // Con el initialState tomamos la informacion de nuestro formulario. Es un objeto.
-    const [ todo, setTodo] = useState(initialState)
-
+    const [ inputs, handleChange, reset] = useFormulario(initialState)
     // luego destructuramos el todo donde se esta guardando la informacion para ahorrar codigo
-    const { nombre, descripcion, estado, prioridad} = todo
+    const { nombre, descripcion, estado, prioridad} = inputs
 
     // Gestiona el formulario. 
     const handleSubmit = (e) => {
@@ -53,6 +54,7 @@ const Formulario = ({agregarTodo}) => {
 
           })
 
+        // en Agregar todo quedara definido las propiedades a pasar.
         agregarTodo({ 
             nombre, 
             descripcion, 
@@ -61,19 +63,11 @@ const Formulario = ({agregarTodo}) => {
             id: uuidv4()
         })
 
-        setTodo(initialState)
+        reset()
     }
 
 
-    // COn esta funcion captamos el valor con nuestro initial state. Creamos la realcion.
-    // Gestiona el contenido de nuestro formulario en tiempo real.
-    const handleChange = (e) => {
-        const { name, value, checked, type } = e.target
-        setTodo((old) => ({
-            ...old, 
-            [name]: type === "checkbox" ? checked : value
-        }))
-    }
+ 
 
     // ClassName son las propiedad que reemplaza a Class.
     // En la casilla de verificacion en vez de utilizar value reemplazamos por checked.
